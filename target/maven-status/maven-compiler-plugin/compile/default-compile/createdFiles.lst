@@ -1,0 +1,10 @@
+Pages\MainPage.class
+Pages\SberPage.class
+Steps\SendAppSteps.class
+TestProperties.class
+Pages\SendAppPage.class
+Steps\BaseSteps.class
+util\AllureListener.class
+Pages\BasePage.class
+Steps\SberSteps.class
+Steps\MainPageSteps.class

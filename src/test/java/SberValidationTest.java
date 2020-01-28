@@ -1,3 +1,4 @@
+import Path.PathForElements;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -6,17 +7,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
+
 import java.util.concurrent.TimeUnit;
 
 public class SberValidationTest {
 
-    /**
-     * Задание лежит в корне проекта, в файле testCase1
-     */
-
-    WebDriver driver;
-    String baseUrl;
+    private WebDriver driver;
+    private String baseUrl;
 
     @Before
     public void beforeMethod() {
@@ -27,60 +26,111 @@ public class SberValidationTest {
         driver.manage().window().maximize();
         driver.get(baseUrl);
     }
+
     @Test
     public void testInsurance() {
-        driver.get(baseUrl + "/");
-        driver.findElement(By.xpath("//ul[@class = 'lg-menu__list']//button[@class = 'lg-menu__link']/span[contains(text(), 'Страхование')]")).click();
-        driver.findElement(By.xpath("//div[@class = 'lg-menu__sub']//a[contains(text(), 'Страхование путешественников')]")).click();
+        PathForElements path = new PathForElements(
+                "Petrov",
+                "Petr",
+                "18.08.1980",
+                "Достоевский",
+                "Федор",
+                "Михайлович",
+                "18.08.1980",
+                "1111",
+                "123456",
+                "18.08.2015",
+                "Паспортный стол №15");
 
         Wait<WebDriver> wait = new WebDriverWait(driver, 5, 1000);
-
+        WebElement mainMenu =  driver.findElement(By.xpath("//ul[@class = 'lg-menu__list']//button[@class = 'lg-menu__link']/span[contains(text(), 'Страхование')]"));
+        wait.until(ExpectedConditions.visibilityOf(mainMenu)).getText();
+        mainMenu.click();
+        WebElement insuranceInMainMenu = driver.findElement(By.xpath("//div[@class = 'lg-menu__sub']//a[contains(text(), 'Страхование путешественников')]"));
+        wait.until(ExpectedConditions.visibilityOf(insuranceInMainMenu)).getText();
+        insuranceInMainMenu.click();
         WebElement h2text = driver.findElement(By.xpath("//span/../../..//h2[contains(text(), 'Страхование путешественников')]"));
-        wait.until(ExpectedConditions.visibilityOf(h2text)).getText();
-        Assert.assertEquals("Страхование путешественников", driver.findElement(By.xpath("//span/../../..//h2[contains(text(), 'Страхование путешественников')]")).getText());
-        driver.findElement(By.xpath("//span/../../..//h2[contains(text(), 'Страхование путешественников')]")).isDisplayed();
-
-        driver.findElement(By.xpath("//b[contains(text(), 'Оформить онлайн')]")).click();
-        driver.findElement(By.xpath("//h3[contains(text(), 'Минимальная')]")).click();
-
+        wait.until(ExpectedConditions.visibilityOf(h2text));
+        Assert.assertEquals("Страхование путешественников", h2text.getText());
+        h2text.isDisplayed();
+        WebElement btnFormalizeOnline = driver.findElement(By.xpath("//b[contains(text(), 'Оформить онлайн')]"));
+        wait.until(ExpectedConditions.visibilityOf(btnFormalizeOnline));
+        btnFormalizeOnline.click();
+        WebElement minimal = driver.findElement(By.xpath("//h3[contains(text(), 'Минимальная')]"));
+        wait.until(ExpectedConditions.visibilityOf(minimal));
+        minimal.click();
         WebElement formalizeButton = driver.findElement(By.xpath("//button[contains(text(), 'Оформить')]"));
-        wait.until(ExpectedConditions.visibilityOf(formalizeButton)).getText();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(formalizeButton);
+        wait.until(ExpectedConditions.visibilityOf(formalizeButton));
+        wait.until(ExpectedConditions.elementToBeClickable(formalizeButton));
+        formalizeButton.click();
 
-        driver.findElement(By.xpath("//button[contains(text(), 'Оформить')]")).click();
-        driver.findElement(By.xpath("//input[@id = 'surname_vzr_ins_0']")).sendKeys("Petrov");
-        driver.findElement(By.xpath("//input[@id = 'name_vzr_ins_0']")).sendKeys("Petr");
-        driver.findElement(By.xpath("//input[@id = 'birthDate_vzr_ins_0']")).sendKeys("05.01.1985");
-        driver.findElement(By.xpath("//label[contains(text(), 'гражданин РФ')]")).click();
-        driver.findElement(By.xpath("//input[@id = 'person_lastName']")).sendKeys("Ложкин");
-        driver.findElement(By.xpath("//input[@id = 'person_firstName']")).sendKeys("Василий");
-        driver.findElement(By.xpath("//input[@id = 'person_middleName']")).sendKeys("Валерьевич");
-        driver.findElement(By.xpath("//input[@id = 'person_birthDate']")).click();
-        driver.findElement(By.xpath("//input[@id = 'person_birthDate']")).sendKeys("05051986");
-        driver.findElement(By.xpath("//input[@id = 'passportSeries']")).click();
-        driver.findElement(By.xpath("//input[@id = 'passportSeries']")).sendKeys("1111");
-        driver.findElement(By.xpath("//input[@id = 'passportNumber']")).sendKeys("111111");
-        driver.findElement(By.xpath("//input[@id = 'documentDate']")).sendKeys("05.05.2007");
-        driver.findElement(By.xpath("//input[@id = 'documentIssue']")).click();
-        driver.findElement(By.xpath("//input[@id = 'documentIssue']")).sendKeys("Паспортным столом №20");
+        WebElement inputSurnameNameOfInsured = driver.findElement(By.xpath("//input[@id = 'surname_vzr_ins_0']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputSurnameNameOfInsured));
+        inputSurnameNameOfInsured.click();
+        inputSurnameNameOfInsured.sendKeys(path.getSurnameOfInsured());
+        WebElement inputNameOfInsured = driver.findElement(By.xpath("//input[@id = 'name_vzr_ins_0']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputNameOfInsured));
+        inputNameOfInsured.click();
+        inputNameOfInsured.sendKeys(path.getNameOfInsured());
+        WebElement inputDateOfBirthOfInsured = driver.findElement(By.xpath("//input[@id = 'birthDate_vzr_ins_0']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputDateOfBirthOfInsured));
+        inputDateOfBirthOfInsured.click();
+        inputDateOfBirthOfInsured.sendKeys(path.getDateOfBirthOfInsured());
+        WebElement inputLastNameOfPayer = driver.findElement(By.xpath("//input[@id = 'person_lastName']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputLastNameOfPayer));
+        inputLastNameOfPayer.click();
+        inputLastNameOfPayer.sendKeys(path.getLastNameOfPayer());
+        WebElement inputNameOfPayer = driver.findElement(By.xpath("//input[@id = 'person_firstName']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputNameOfPayer));
+        inputNameOfPayer.click();
+        inputNameOfPayer.sendKeys(path.getNameOfPayer());
+        WebElement inputFatherNameOfPayer = driver.findElement(By.xpath("//input[@id = 'person_middleName']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputFatherNameOfPayer));
+        inputFatherNameOfPayer.click();
+        inputFatherNameOfPayer.sendKeys(path.getFatherNameOfPayer());
+        WebElement inputDateOfBirthOfPayer = driver.findElement(By.xpath("//input[@id = 'person_birthDate']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputDateOfBirthOfPayer));
+        inputDateOfBirthOfPayer.click();
+        inputDateOfBirthOfPayer.sendKeys(path.getDateOfBirthOfPayer());
+        WebElement inputDocSeries = driver.findElement(By.xpath("//input[@id = 'passportSeries']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputDocSeries));
+        inputDocSeries.click();
+        inputDocSeries.sendKeys(path.getDocSeries());
+        WebElement inputDocNumber = driver.findElement(By.xpath("//input[@id = 'passportNumber']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputDocNumber));
+        inputDocNumber.click();
+        inputDocNumber.sendKeys(path.getDocNumber());
+        WebElement inputDocDate = driver.findElement(By.xpath("//input[@id = 'documentDate']"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputDocDate));
+        inputDocDate.click();
+        inputDocDate.sendKeys(path.getDocDate());
+        WebElement getDocIssue = driver.findElement(By.xpath("//input[@id = 'documentIssue']"));
+        wait.until(ExpectedConditions.elementToBeClickable(getDocIssue));
+        getDocIssue.click();
+        getDocIssue.sendKeys(path.getDocIssue());
 
-        Assert.assertEquals("Petrov", driver.findElement(By.xpath("//input[@id = 'surname_vzr_ins_0']")).getAttribute("value"));
-        Assert.assertEquals("Petr", driver.findElement(By.xpath("//input[@id = 'name_vzr_ins_0']")).getAttribute("value"));
-        Assert.assertEquals("05.01.1985", driver.findElement(By.xpath("//input[@id = 'birthDate_vzr_ins_0']")).getAttribute("value"));
-        Assert.assertEquals("Ложкин", driver.findElement(By.xpath("//input[@id = 'person_lastName']")).getAttribute("value"));
-        Assert.assertEquals("Василий", driver.findElement(By.xpath("//input[@id = 'person_firstName']")).getAttribute("value"));
-        Assert.assertEquals("Валерьевич", driver.findElement(By.xpath("//input[@id = 'person_middleName']")).getAttribute("value"));
-        Assert.assertEquals("05.05.1986", driver.findElement(By.xpath("//input[@id = 'person_birthDate']")).getAttribute("value"));
-        Assert.assertEquals("1111", driver.findElement(By.xpath("//input[@placeholder = 'Серия']")).getAttribute("value"));
-        Assert.assertEquals("111111", driver.findElement(By.xpath("//input[@id = 'passportNumber']")).getAttribute("value"));
-        Assert.assertEquals("05.05.2007", driver.findElement(By.xpath("//input[@id = 'documentDate']")).getAttribute("value"));
-        Assert.assertEquals("Паспортным столом №20", driver.findElement(By.xpath("//input[@id = 'documentIssue']")).getAttribute("value"));
+        Assert.assertEquals(path.getSurnameOfInsured(), inputSurnameNameOfInsured.getAttribute("value"));
+        Assert.assertEquals(path.getNameOfInsured(), inputNameOfInsured.getAttribute("value"));
+        Assert.assertEquals(path.getDateOfBirthOfInsured(), inputDateOfBirthOfInsured.getAttribute("value"));
+        Assert.assertEquals(path.getLastNameOfPayer(), inputLastNameOfPayer.getAttribute("value"));
+        Assert.assertEquals(path.getNameOfPayer(), inputNameOfPayer.getAttribute("value"));
+        Assert.assertEquals(path.getFatherNameOfPayer(), inputFatherNameOfPayer.getAttribute("value"));
+        Assert.assertEquals(path.getDateOfBirthOfPayer(), inputDateOfBirthOfPayer.getAttribute("value"));
+        Assert.assertEquals(path.getDocSeries(), inputDocSeries.getAttribute("value"));
+        Assert.assertEquals(path.getDocNumber(), inputDocNumber.getAttribute("value"));
+        Assert.assertEquals(path.getDocDate(), inputDocDate.getAttribute("value"));
+        Assert.assertEquals(path.getDocIssue(), getDocIssue.getAttribute("value"));
 
-        driver.findElement(By.xpath("//button[contains(text(), 'Продолжить')]")).click();
+        WebElement btnContinue =  driver.findElement(By.xpath("//button[contains(text(), 'Продолжить')]"));
+        wait.until(ExpectedConditions.elementToBeClickable(btnContinue));
+        btnContinue.click();
+
         WebElement validationMessage = driver.findElement(By.xpath("//div[@class ='alert-form alert-form-error']"));
-        wait.until(ExpectedConditions.visibilityOf(validationMessage)).getText();
-
-        Assert.assertEquals("При заполнении данных произошла ошибка", driver.findElement(By.xpath("//div[@class ='alert-form alert-form-error']")).getText());
-        driver.findElement(By.xpath("//div[@class ='alert-form alert-form-error']")).isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(validationMessage));
+        Assert.assertEquals("При заполнении данных произошла ошибка", validationMessage.getText());
+        validationMessage.isDisplayed();
     }
 
     @After
