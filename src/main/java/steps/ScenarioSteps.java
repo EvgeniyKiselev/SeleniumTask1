@@ -1,13 +1,16 @@
+/**
 package steps;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.api.java.ru.Когда;
 
+import static pages.SberPage.h2;
+
 public class ScenarioSteps {
     MainPageSteps mainPageSteps = new MainPageSteps();
 
-    SberSteps dmsSteps = new SberSteps();
+    SberSteps sberSteps = new SberSteps();
 
     SendAppSteps sendAppSteps = new SendAppSteps();
 
@@ -21,9 +24,9 @@ public class ScenarioSteps {
         mainPageSteps.selectMenuInsurance(menuName);
     }
 
-    @Then("^заголовок страницы - ДМС равен \"(.+)\"$")
-    public void checkTitleDMSPage(String title){
-        dmsSteps.checkPageTitle(title);
+    @Then("^заголовок страницы - Страхование путешественников равен \"(.+)\"$")
+    public void checkTitleSberPage(String title){
+        sberSteps.checkPageTitle();
     }
 
     @When("^выполнено нажати на кнопку Отправить заявку$")
@@ -57,3 +60,4 @@ public class ScenarioSteps {
 
     }
 }
+*/

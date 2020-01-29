@@ -1,116 +1,174 @@
 package pages;
+
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import steps.BaseSteps;
+import util.Init;
 
-public class SendAppPage extends BasePageObject {
-    @FindBy(xpath = "//div[@_ngcontent-c4]/div/div/a[contains(text(), 'Оформление')]")
-    public WebElement title;
+public class SendAppPage extends BasePage {
+    @FindBy(xpath = "//div[contains(@class, 'active') and contains(., 'Оформление')]")
+    WebElement navMenu;
 
-    @FindBy(name = "LastName")
-    WebElement lastName;
+    @FindBy(xpath = "//input[@id = 'surname_vzr_ins_0']")
+    WebElement insuredLastName;
 
-    @FindBy(name = "FirstName")
-    WebElement firstName;
+    @FindBy(xpath = "//input[@id = 'name_vzr_ins_0']")
+    WebElement insuredName;
 
-    @FindBy(name = "MiddleName")
-    WebElement middleName;
+    @FindBy(xpath = "//input[@id = 'birthDate_vzr_ins_0']")
+    WebElement insuredDateOfBirth;
 
-    @FindBy(xpath = "//*[contains(text(),'Телефон')]/..//input")
-    WebElement phone;
+    @FindBy(xpath = "//input[@id = 'person_lastName']")
+    WebElement payerLastName;
 
-    @FindBy(name = "Email")
-    WebElement email;
+    @FindBy(xpath = "//input[@id = 'person_firstName']")
+    WebElement payerName;
 
-    @FindBy(name = "ContactDate")
-    WebElement contactDate;
+    @FindBy(xpath = "//input[@id = 'person_middleName']")
+    WebElement payerMiddleName;
 
-    @FindBy(name = "Comment")
-    WebElement comment;
+    @FindBy(xpath = "//input[@id = 'person_birthDate']")
+    WebElement payerDateOfBirth;
 
-    @FindBy(name = "Region")
-    WebElement region;
+    @FindBy(xpath = "//input[@id = 'passportSeries']")
+    WebElement docSeries;
 
-    @FindBy(xpath = "//button[contains(text(),'Отправить')]")
+    @FindBy(xpath = "//input[@id = 'passportNumber']")
+    WebElement docNumber;
+
+    @FindBy(xpath = "//input[@id = 'documentDate']")
+    WebElement docDate;
+
+    @FindBy(xpath = "//input[@id = 'documentIssue']")
+    WebElement docIssue;
+
+    @FindBy(xpath = "//button[contains(text(), 'Продолжить')]")
     WebElement sendButton;
 
-    public SendAppPage() {
-        PageFactory.initElements(BaseSteps.getDriver(), this);
-        (new WebDriverWait(BaseSteps.getDriver(), 10))
-                .until(ExpectedConditions.visibilityOf(title));
+    @FindBy(xpath = "//div[@class ='alert-form alert-form-error']")
+    WebElement validationMessage;
+
+    public SendAppPage(WebDriver driver) {
+        PageFactory.initElements(Init.getDriver(), this);
+        (new WebDriverWait(Init.getDriver(), 10))
+                .until(ExpectedConditions.visibilityOf(navMenu));
+        this.driver = driver;
     }
 
-    public void fillField(String fieldName, String value){
-        switch (fieldName){
-            case  "Фамилия":
-                fillField(lastName, value);
+    public void waitNavClickable(){
+        Wait<WebDriver> wait = new WebDriverWait(Init.getDriver(), 5, 1000);
+        wait.until(ExpectedConditions.visibilityOf(navMenu));
+    }
+
+    public void fillField(String fieldName, String value) {
+        switch (fieldName) {
+            case "Фамилия застрахованного":
+                wait.until(ExpectedConditions.visibilityOf(insuredLastName));
+                wait.until(ExpectedConditions.elementToBeClickable(insuredLastName));
+                insuredLastName.click();
+                fillField(insuredLastName, value);
                 break;
-            case  "Имя":
-                fillField(firstName, value);
+            case "Имя застрахованного":
+                wait.until(ExpectedConditions.visibilityOf(insuredName));
+                wait.until(ExpectedConditions.elementToBeClickable(insuredName));
+                insuredName.click();
+                fillField(insuredName, value);
                 break;
-            case  "Отчество":
-                fillField(middleName, value);
+            case "Дата рождения застрахованного":
+                wait.until(ExpectedConditions.elementToBeClickable(insuredDateOfBirth));
+                insuredDateOfBirth.click();
+                fillField(insuredDateOfBirth, value);
                 break;
-            case  "Телефон":
-                fillField(phone, value);
+            case "Фамилия страхователя":
+                wait.until(ExpectedConditions.elementToBeClickable(payerLastName));
+                payerLastName.click();
+                fillField(payerLastName, value);
                 break;
-            case  "Регион":
-                region.click();
-                region.findElement(By.xpath("//option[text()='" + value + "']")).click();
+            case "Имя страхователя":
+                wait.until(ExpectedConditions.elementToBeClickable(payerName));
+                payerName.click();
+                fillField(payerName, value);
                 break;
-            case  "Эл. почта":
-                fillField(email, value);
+            case "Отчество страхователя":
+                wait.until(ExpectedConditions.elementToBeClickable(payerMiddleName));
+                payerMiddleName.click();
+                fillField(payerMiddleName, value);
                 break;
-            case  "Дата контакта":
-                fillField(contactDate, value);
-                contactDate.sendKeys(Keys.TAB);
+            case "Дата рождения страхователя":
+                wait.until(ExpectedConditions.elementToBeClickable(payerDateOfBirth));
+                payerDateOfBirth.click();
+                fillField(payerDateOfBirth, value);
                 break;
-            case  "Комментарии":
-                fillField(comment, value);
+            case "Серия паспорта":
+                wait.until(ExpectedConditions.elementToBeClickable(docSeries));
+                docSeries.click();
+                fillField(docSeries, value);
                 break;
-            default:  throw new AssertionError("Поле '"+fieldName+"' не объявлено на странице");
+            case "Номер паспорта":
+                wait.until(ExpectedConditions.elementToBeClickable(docNumber));
+                docNumber.click();
+                fillField(docNumber, value);
+                break;
+            case "Дата выдачи паспорта":
+                wait.until(ExpectedConditions.elementToBeClickable(docDate));
+                docDate.click();
+                fillField(docDate, value);
+                break;
+            case "Кем выдан":
+                wait.until(ExpectedConditions.elementToBeClickable(docIssue));
+                docIssue.click();
+                fillField(docIssue, value);
+                break;
+            default:
+                throw new AssertionError("Поле '" + fieldName + "' не объявлено на странице");
         }
     }
 
-    public String getFillField(String fieldName){
-        switch (fieldName){
-            case  "Фамилия":
-                return lastName.getAttribute("value");
-            case  "Имя":
-                return firstName.getAttribute("value");
-            case  "Отчество":
-                return middleName.getAttribute("value");
-            case  "Телефон":
-                return phone.getAttribute("value");
-            case  "Регион":
-                String value = region.getAttribute("value");
-                return region.findElement(By.xpath(".//*[@value='"+value+"']")).getText();
-            case  "Эл. почта":
-                return email.getAttribute("value");
-            case  "Комментарии":
-                return comment.getAttribute("value");
-            case  "Дата контакта":
-                return contactDate.getAttribute("value");
+    public String getFillField(String fieldName) {
+        switch (fieldName) {
+            case "Фамилия застрахованного":
+                return insuredLastName.getAttribute("value");
+            case "Имя застрахованного":
+                return insuredName.getAttribute("value");
+            case "Дата рождения застрахованного":
+                return insuredDateOfBirth.getAttribute("value");
+            case "Фамилия страхователя":
+                return payerLastName.getAttribute("value");
+            case "Имя страхователя":
+                return payerName.getAttribute("value");
+            case "Отчество страхователя":
+                return payerMiddleName.getAttribute("value");
+            case "Дата рождения страхователя":
+                return payerDateOfBirth.getAttribute("value");
+            case "Серия паспорта":
+                return docSeries.getAttribute("value");
+            case "Номер паспорта":
+                return docNumber.getAttribute("value");
+            case "Дата выдачи паспорта":
+                return docDate.getAttribute("value");
+            case "Кем выдан":
+                return docIssue.getAttribute("value");
         }
         throw new AssertionError("Поле не объявлено на странице");
     }
 
-
-    public void checkFieldErrorMessage(String field, String errorMessage){
-        String xpath = "//*[text()='"+field+"']/..//*[@class='validation-error']";
-        String actualValue = BaseSteps.getDriver().findElement(By.xpath(xpath)).getText();
+    public void checkFieldErrorMessage(String field, String errorMessage) {
+        //String errorMessage = "При заполнении данных произошла ошибка";
+        String actualValue = getFieldErrorMessage();
         Assert.assertTrue(String.format("Получено значение [%s]. Ожидалось [%s]", actualValue, errorMessage),
                 actualValue.contains(errorMessage));
     }
 
-    public String getFieldErrorMessage(String field) {
-        String xpath = "//*[text()='"+field+"']/..//*[@class='validation-error']";
-        return BaseSteps.getDriver().findElement(By.xpath(xpath)).getText();
+    public String getFieldErrorMessage() {
+        return validationMessage.getText();
+    }
+
+    public void sendResult() {
+        sendButton.click();
     }
 }

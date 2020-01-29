@@ -1,3 +1,4 @@
+/**
 package util;
 import gherkin.formatter.model.Result;
 import org.openqa.selenium.OutputType;
@@ -22,3 +23,4 @@ public class AllureReporter extends ru.yandex.qatools.allure.cucumberjvm.AllureR
         }
     }
 }
+ */

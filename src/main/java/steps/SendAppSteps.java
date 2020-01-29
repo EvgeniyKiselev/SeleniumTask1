@@ -1,0 +1,41 @@
+/*
+package steps;
+import io.qameta.allure.Step;
+import pages.SendAppPage;
+import java.util.HashMap;
+import static org.junit.Assert.assertTrue;
+
+public class SendAppSteps {
+    @Step("поле {0} заполняется значением {1}")
+    public void fillField(String field, String value){
+        new SendAppPage().fillField(field, value);
+    }
+
+    @Step("поле {0} заполнено значением {1}")
+    public void checkFillField(String field, String value){
+        String actual = new SendAppPage().getFillField(field);
+        assertTrue(String.format("Значение поля [%s] равно [%s]. Ожидалось - [%s]", field, actual, value),
+                actual.equals(value));
+    }
+
+    @Step("в поле {0} присутствует сообщение об ошибке {1}")
+    public void checkErrorMessageField(String field, String value){
+        new SendAppPage().checkFieldErrorMessage(field, value);
+    }
+
+    @Step("заполняются поля")
+    public void fillFields(HashMap<String, String> fields){
+        fields.forEach(this::fillField);
+    }
+
+    @Step("поля заполнены верно")
+    public void checkFillFields(HashMap<String, String> fields){
+        fields.forEach(this::checkFillField);
+    }
+
+    @Step
+    public String getErrorMessageField(String field) {
+        return new SendAppPage().getFieldErrorMessage();
+    }
+}
+*/

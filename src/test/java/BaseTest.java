@@ -1,3 +1,4 @@
+/*
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.By;
@@ -15,25 +16,16 @@ import static org.junit.Assert.assertEquals;
 public class BaseTest {
     protected static WebDriver driver;
     protected static String baseUrl;
-    public static Properties properties = TestProperties.getInstance().getProperty();
-
+    public static Properties properties = new Properties();
 
     @BeforeClass
     public static void setUp() throws Exception {
-        switch (properties.getProperty("browser")){
-            case "firefox":
-                System.setProperty("webdriver.gecko.driver", properties.getProperty("webdriver.gecko.driver"));
-                driver = new FirefoxDriver();
-                break;
-            default:
-                System.setProperty("webdriver.chrome.driver", properties.getProperty("webdriver.chrome.driver"));
-                driver = new ChromeDriver();
-        }
-
-        baseUrl = properties.getProperty("app.url");
-        System.out.println(baseUrl);
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        System.setProperty("webdriver.chrome.driver", "drv/chromedriver.exe");
+        baseUrl = "http://www.sberbank.ru/ru/person";
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         driver.manage().window().maximize();
+        driver.get(baseUrl);
     }
 
     @AfterClass
@@ -60,3 +52,5 @@ public class BaseTest {
     }
 
 }
+
+ */

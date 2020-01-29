@@ -5,31 +5,32 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class TestProperties {
-    private Properties props = new Properties();
+    private final Properties properties = new Properties();
 
     private static TestProperties INSTANCE = null;
 
-    private TestProperties(){
+    public TestProperties() {
+        //System.setProperty("environment", "application");
         try {
-            props.load(new FileInputStream(new File("src/test/resources/"+System.getProperty("env", "dev")+".properties")));
+            properties.load(new FileInputStream(new File("src/test/resources/" + System.getProperty("application", "application") + ".properties")));
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Test properties created!");
     }
 
-    public static TestProperties getInstance(){
-        if (INSTANCE==null){
+    public static TestProperties getInstance() {
+        if (INSTANCE == null){
             INSTANCE = new TestProperties();
         }
         return INSTANCE;
     }
 
     public String getProperty(String key, String defaultValue){
-        return props.getProperty(key, defaultValue);
+        return properties.getProperty(key, defaultValue);
     }
-
-    public String getProperty(String key){
-        return props.getProperty(key);
+    public String getProperties(String key) {
+        return properties.getProperty(key);
     }
 }
+
